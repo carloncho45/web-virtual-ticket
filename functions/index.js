@@ -13,7 +13,7 @@ admin.initializeApp();
 //  const client = new language.LanguageServiceClient();
 const express = require('express');
 const app = express();
-
+const GMT_OFFSET = -5;
 // Express middleware that validates Firebase ID Tokens passed in the Authorization HTTP header.
 // The Firebase ID token needs to be passed as a Bearer token in the Authorization HTTP header like this:
 // `Authorization: Bearer <Firebase ID Token>`.
@@ -30,7 +30,7 @@ const authenticate = async (req, res, next) => {
         req.user = decodedIdToken;
         next();
         return;
-    } catch(e) {
+    } catch (e) {
         res.status(403).send('Unauthorized!');
         return;
     }
@@ -43,8 +43,18 @@ app.use(authenticate);
 app.get('/test-connection', async (req, res) => {
     const hour = new Date().getTime()
     // London is UTC + 1hr;
-    res.status(200).json({"date": hour});
+    const formatLocal = calculateDate(new Date(hour))
+    res.status(200).json({"date": formatLocal, "formateDate": hour});
 });
+
+function calculateDate(originalDate) {
+    // convert to msec subtract local time zone offset get UTC time in msec
+    var utc = originalDate.getTime() - (originalDate.getTimezoneOffset() * 60000);
+
+    // create new Date object for different city using supplied offset
+    var nd = new Date(utc + (3600000 * GMT_OFFSET));
+    return nd.getTime();
+}
 
 /*exports.scheduledFunction = functions.pubsub.schedule('00 12 * * *').onRun((context) => {
     console.log('This will be run every 1 minutes!!!!!!!');
