@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "virtual-ticket-ci01"
+    "default": "virtual-ticket-ci01",
+    "tickets-prd": "virtual-ticket-prd"
   }
 }

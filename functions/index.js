@@ -19,6 +19,7 @@ const GMT_OFFSET = -5;
 // `Authorization: Bearer <Firebase ID Token>`.
 // when decoded successfully, the ID Token content will be added as `req.user`.
 //
+//
 const authenticate = async (req, res, next) => {
     if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
         res.status(403).send('Unauthorized');
